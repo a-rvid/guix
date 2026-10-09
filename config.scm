@@ -2,26 +2,34 @@
              (gnu system nss)
              (nongnu packages linux)
              (nongnu system linux-initrd)
+             (nongnu packages messaging) ; signal-cli and signal-desktop
              (nongnu packages nvidia)
              (nonguix transformations))
 
-(use-service-modules desktop xorg networking dbus)
+(use-service-modules desktop xorg networking dbus sound)
 
 (use-package-modules bootloaders
+		     linux
                      vim
 		     security-token
                      fonts
                      window-management
 		     ssh
                      python-xyz
+		     image
                      terminals
                      version-control
-                     gnuzilla
+                     librewolf
+		     code
                      xdisorg
                      tor-browsers
                      emacs
                      emacs-xyz
                      rust
+		     gl
+		     llvm
+		     commencement
+		     gcc
                      admin
                      xorg)
 
@@ -60,20 +68,39 @@
    (users (cons (user-account
                  (name "user")
                  (group "users")
-                 (supplementary-groups '("wheel" "netdev" "audio" "video" "seat" "plugdev"
+                 (supplementary-groups '("wheel" "netdev" "audio" "video" "plugdev"
                                          "input"))) %base-user-accounts))
 
    (packages (append (list swayfx
                            swayidle
                            swaylock
                            fuzzel
+			   grim slurp
+			   alsa-utils
+			   emacs
+			   emacs-exwm
+			   xinit
+			   xorg-server
                            vim
 			   hpn-ssh-sans-x
                            btop
                            font-jetbrains-mono
                            font-google-noto
                            font-google-noto-sans-cjk
-                           icecat-minimal
+			   clang
+			   gcc
+			   gcc-toolchain
+			   rust
+			   libx11
+			   libxi
+			   libxcursor
+			   libxkbcommon
+			   mesa
+			   cloc
+			   alsa-lib
+                           librewolf
+			   signal-desktop
+			   signal-cli
                            torbrowser
                            foot
                            git
@@ -83,7 +110,7 @@
    (services
     (cons* (service greetd-service-type
 		    (greetd-configuration
-		     (greeter-supplementary-groups (list "video" "input" "seat"))
+		     (greeter-supplementary-groups (list "video" "input"))
 		     (terminals
 		      (list (greetd-terminal-configuration
 			     (terminal-vt "7")
@@ -102,13 +129,14 @@
                      (using-setuid? #f)))
 
            (service dbus-root-service-type)
-           (service seatd-service-type)
+           (service elogind-service-type)
 	   
 	   (udev-rules-service 'fido2 libfido2 #:groups '("plugdev"))
 
            (service pam-limits-service-type
                     (list (pam-limits-entry "*" 'both 'core 0)))
-
+	   
+	   
            (service polkit-service-type)
            (service network-manager-service-type)
            (service wpa-supplicant-service-type)

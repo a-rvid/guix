@@ -11,6 +11,7 @@
 
 (define emacs-packages
   (list emacs-next-pgtk
+	emacs-next
         emacs-nord-theme
         emacs-evil
         emacs-evil-commentary
@@ -21,9 +22,11 @@
 	emacs-marginalia
 	emacs-lsp-mode
 	emacs-geiser
+	emacs-disproject
 	emacs-orderless
         emacs-guix
         emacs-magit
+	emacs-rustic
         emacs-vterm))
 
 (define (collect-files dir)
