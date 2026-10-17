@@ -1,18 +1,22 @@
 (use-modules (gnu)
              (gnu system nss)
+	     (sys-modules packages sanctum)
+	     (sys-modules services tier6)
              (nongnu packages linux)
              (nongnu system linux-initrd)
              (nongnu packages messaging) ; signal-cli and signal-desktop
              (nongnu packages nvidia)
              (nonguix transformations))
 
-(use-service-modules desktop xorg networking dbus sound)
+(use-service-modules desktop xorg networking dbus sound linux)
 
 (use-package-modules bootloaders
 		     linux
                      vim
 		     security-token
                      fonts
+		     package-management
+		     bittorrent
                      window-management
 		     ssh
                      python-xyz
@@ -22,13 +26,16 @@
                      librewolf
 		     code
                      xdisorg
+		     freedesktop
                      tor-browsers
+		     file
                      emacs
                      emacs-xyz
                      rust
 		     gl
 		     llvm
 		     commencement
+		     compression
 		     gcc
                      admin
                      xorg)
@@ -76,6 +83,8 @@
                            swaylock
                            fuzzel
 			   grim slurp
+			   xdg-desktop-portal
+			   xdg-desktop-portal-wlr
 			   alsa-utils
 			   emacs
 			   emacs-exwm
@@ -87,15 +96,22 @@
                            font-jetbrains-mono
                            font-google-noto
                            font-google-noto-sans-cjk
+			   qbittorrent
+			   flatpak
 			   clang
 			   gcc
 			   gcc-toolchain
 			   rust
+			   tier6
+			   sanctum
+			   rlq
 			   libx11
 			   libxi
 			   libxcursor
 			   libxkbcommon
 			   mesa
+			   file
+			   unzip 
 			   cloc
 			   alsa-lib
                            librewolf
@@ -121,6 +137,26 @@
 			       (greetd-user-session
 				(command (file-append swayfx "/bin/sway"))
 				(command-args '()))))))))
+	   
+	   (service kernel-module-loader-service-type '("tun"))
+	   (service tier6-service-type
+		    (tier6-configuration
+		     (autoconfigure? #t)
+		     (config-file
+		      (plain-file "tier6.conf"
+				  "runas tier6
+kek-id 02
+cs-id 9e4dcc5a
+flock d16b99b70da45f00
+tapname 9e4dcc5a
+mtu 1359
+shroud yes 
+cathedral cathedral.reliquary.se:4469
+kek-path /var/lib/tier6/kek-0x02
+cs-path /var/lib/tier6/id-9e4dcc5a
+cosk-path /var/lib/tier6/cosk-9e4dcc5a
+remembrance /var/lib/tier6/remembrance.bin
+"))))
 
            (service screen-locker-service-type
                     (screen-locker-configuration
