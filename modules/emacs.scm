@@ -3,16 +3,26 @@
   #:use-module (gnu packages emacs-xyz)
   #:use-module (gnu home services)
   #:use-module (guix gexp)
+  #:use-module (guix packages)
   #:use-module (ice-9 ftw)
   #:use-module (ice-9 match)
   #:use-module (srfi srfi-1)
   #:export (emacs-packages
             emacs-home-services))
 
+(define emacs-nord-theme-patched
+  (package
+    (inherit emacs-nord-theme)
+    (source
+     (origin
+       (inherit (package-source emacs-nord-theme))
+       (patches (append (origin-patches (package-source emacs-nord-theme))
+                        (list (local-file "../patches/emacs-nord-theme-lexical.patch"))))))))
+
 (define emacs-packages
   (list emacs-next-pgtk
 	emacs-next
-        emacs-nord-theme
+        emacs-nord-theme-patched
         emacs-evil
         emacs-evil-commentary
         emacs-undo-fu

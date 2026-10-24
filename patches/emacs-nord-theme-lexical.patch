@@ -1,0 +1,9 @@
+diff -urN a/nord-theme.el b/nord-theme.el
+--- a/nord-theme.el	2026-10-24 12:09:56.651967794 +0200
++++ b/nord-theme.el	2026-10-24 12:12:13.288007989 +0200
+@@ -1,4 +1,4 @@
+-;;; nord-theme.el --- An arctic, north-bluish clean and elegant theme
++;;; nord-theme.el --- An arctic, north-bluish clean and elegant theme -*- lexical-binding: t -*-
+ 
+ ;; Copyright (c) 2016-present Sven Greb <development@svengreb.de> (https://www.svengreb.de)
+ 

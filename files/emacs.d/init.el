@@ -46,7 +46,6 @@
   (setq rustic-format-on-save nil)
   :custom
   (rustic-cargo-use-last-stored-arguments t))
-(push 'rustic-clippy flycheck-checkers)
 
 (global-set-key (kbd "C-c r") (lambda ()
 			       (interactive)
