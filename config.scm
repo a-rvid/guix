@@ -1,6 +1,7 @@
 (use-modules (gnu)
              (gnu system nss)
 	     (sys-modules packages sanctum)
+	     (sys-modules packages dwm)
 	     (sys-modules services tier6)
              (nongnu packages linux)
              (nongnu system linux-initrd)
@@ -15,6 +16,7 @@
                      vim
 		     security-token
 		     shellutils
+		     suckless
                      fonts
 		     package-management
 		     bittorrent
@@ -47,6 +49,7 @@
    (host-name "guix-btw")
    (timezone "Europe/Stockholm")
    (locale "en_US.utf8")
+   (keyboard-layout (keyboard-layout "se"))
 
    (kernel linux)
    (initrd microcode-initrd)
@@ -94,6 +97,10 @@
 			   emacs-exwm
 			   xinit
 			   xorg-server
+			   xf86-input-libinput
+			   my-dwm
+			   st
+			   dmenu
                            vim
 			   hpn-ssh-sans-x
                            btop
@@ -141,14 +148,14 @@
 			       (greetd-user-session
 				(command (file-append swayfx "/bin/sway"))
 				(command-args '()))))))))
-	   
-	   (service kernel-module-loader-service-type '("tun"))
-	   (service tier6-service-type
-		    (tier6-configuration
-		     (autoconfigure? #t)
-		     (config-file
-		      (plain-file "tier6.conf"
-				  "runas tier6
+	    
+	    (service kernel-module-loader-service-type '("tun"))
+	    (service tier6-service-type
+		     (tier6-configuration
+		      (autoconfigure? #t)
+		      (config-file
+		       (plain-file "tier6.conf"
+				   "runas tier6
 kek-id 02
 cs-id 9e4dcc5a
 flock d16b99b70da45f00
@@ -160,33 +167,48 @@ cs-path /var/lib/tier6/id-9e4dcc5a
 cosk-path /var/lib/tier6/cosk-9e4dcc5a
 remembrance /var/lib/tier6/remembrance.bin
 "))))
+(service xorg-server-service-type
+         (xorg-configuration
+          (modules (list nvidia-driver))   ; puts nvidia_drv.so on the module path
+          (extra-config
+           (list "Section \"Device\"
+    Identifier \"nvidia\"
+    Driver     \"nvidia\"
+    BusID      \"PCI:1:0:0\"
+EndSection
 
-           (service screen-locker-service-type
-                    (screen-locker-configuration
-                     (name "swaylock")
-                     (program (file-append swaylock "/bin/swaylock"))
-                     (using-setuid? #f)))
+Section \"Screen\"
+    Identifier \"nvidia-screen\"
+    Device     \"nvidia\"
+EndSection
+"))))
 
-           (service dbus-root-service-type)
-           (service elogind-service-type)
+            (service screen-locker-service-type
+                     (screen-locker-configuration
+                      (name "swaylock")
+                      (program (file-append swaylock "/bin/swaylock"))
+                      (using-setuid? #f)))
 
-	   (service cups-service-type
-		    (cups-configuration
-		     (web-interface? #t)
-		     (extensions
-		      (list cups-filters hplip-minimal))))
-	   
-	   (udev-rules-service 'fido2 libfido2 #:groups '("plugdev"))
+            (service dbus-root-service-type)
+            (service elogind-service-type)
 
-           (service pam-limits-service-type
-                    (list (pam-limits-entry "*" 'both 'core 0)))
-	   
-	   
-           (service polkit-service-type)
-           (service network-manager-service-type)
-           (service wpa-supplicant-service-type)
+	    (service cups-service-type
+		     (cups-configuration
+		      (web-interface? #t)
+		      (extensions
+		       (list cups-filters hplip-minimal))))
+	    
+	    (udev-rules-service 'fido2 libfido2 #:groups '("plugdev"))
 
-           %base-services))))
+            (service pam-limits-service-type
+                     (list (pam-limits-entry "*" 'both 'core 0)))
+	    
+	    
+            (service polkit-service-type)
+            (service network-manager-service-type)
+            (service wpa-supplicant-service-type)
 
-((nonguix-transformation-nvidia #:driver nvda-580)
- %my-os)
+            %base-services))))
+
+  ((nonguix-transformation-nvidia #:driver nvda-580)
+   %my-os)

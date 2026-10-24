@@ -61,7 +61,7 @@
   (map (match-lambda
          ((rel . abs)
           (list (string-append ".emacs.d/" rel) (local-file abs))))
-       (collect-files "../files/emacs.d")))
+       (collect-files "../config/emacs.d")))
 
 (define emacs-home-services
   (list (simple-service 'emacs-dotfiles
