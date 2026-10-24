@@ -8,12 +8,13 @@
              (nongnu packages nvidia)
              (nonguix transformations))
 
-(use-service-modules desktop xorg networking dbus sound linux)
+(use-service-modules desktop xorg cups networking dbus sound linux)
 
 (use-package-modules bootloaders
 		     linux
                      vim
 		     security-token
+		     shellutils
                      fonts
 		     package-management
 		     bittorrent
@@ -26,6 +27,7 @@
                      librewolf
 		     code
                      xdisorg
+		     cups
 		     freedesktop
                      tor-browsers
 		     file
@@ -79,9 +81,11 @@
                                          "input"))) %base-user-accounts))
 
    (packages (append (list swayfx
+			   cage
                            swayidle
                            swaylock
                            fuzzel
+			   pay-respects
 			   grim slurp
 			   xdg-desktop-portal
 			   xdg-desktop-portal-wlr
@@ -149,8 +153,7 @@ kek-id 02
 cs-id 9e4dcc5a
 flock d16b99b70da45f00
 tapname 9e4dcc5a
-mtu 1359
-shroud yes 
+shroud yes
 cathedral cathedral.reliquary.se:4469
 kek-path /var/lib/tier6/kek-0x02
 cs-path /var/lib/tier6/id-9e4dcc5a
@@ -166,6 +169,12 @@ remembrance /var/lib/tier6/remembrance.bin
 
            (service dbus-root-service-type)
            (service elogind-service-type)
+
+	   (service cups-service-type
+		    (cups-configuration
+		     (web-interface? #t)
+		     (extensions
+		      (list cups-filters hplip-minimal))))
 	   
 	   (udev-rules-service 'fido2 libfido2 #:groups '("plugdev"))
 

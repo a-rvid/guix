@@ -5,11 +5,12 @@
 	     (gnu packages gnome)
              (modules emacs)
              (modules fuzzel)
+             (modules bash)
              (modules foot)
              (modules sway))
 
 (home-environment
- (packages (append emacs-packages (list hicolor-icon-theme)))
+ (packages (append emacs-packages bash-packages (list hicolor-icon-theme)))
  (services (append (list (service home-pipewire-service-type) (service home-dbus-service-type))
-		   sway-service foot-home-services fuzzel-home-services emacs-home-services)))
+		   sway-service foot-home-services bash-home-services fuzzel-home-services emacs-home-services)))
 
